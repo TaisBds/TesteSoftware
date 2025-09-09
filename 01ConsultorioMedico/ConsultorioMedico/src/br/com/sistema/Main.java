@@ -1,0 +1,130 @@
+package br.com.sistema;
+
+import java.util.*;
+
+import br.com.agendamento.Consulta;
+
+import java.time.LocalDateTime;
+
+public class Main {
+    private static List<Usuario> usuarios = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        int opcao;
+        do {
+            System.out.println("\n--- Sistema de Agendamento de Consultas ---");
+            System.out.println("1. Cadastrar Usuário");
+            System.out.println("2. Fazer Login");
+            System.out.println("0. Sair");
+            System.out.print("Escolha uma opção: ");
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1: cadastrarUsuario(); break;
+                case 2: login(); break;
+                case 0: System.out.println("Saindo..."); break;
+                default: System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    // Cadastro HU01
+    private static void cadastrarUsuario() {
+        System.out.print("Nome: ");
+        String nome = scanner.nextLine();
+        System.out.print("E-mail: ");
+        String email = scanner.nextLine();
+        System.out.print("Senha: ");
+        String senha = scanner.nextLine();
+        System.out.print("Confirmar Senha: ");
+        String confirmar = scanner.nextLine();
+
+        if (!senha.equals(confirmar)) {
+            System.out.println("Senhas não coincidem!");
+            return;
+        }
+
+        System.out.print("Tipo de usuário (1 - Paciente | 2 - Médico): ");
+        int tipo = scanner.nextInt();
+        scanner.nextLine();
+
+        Usuario usuario;
+        if (tipo == 1) {
+            usuario = new Usuario(nome, email, senha);
+        } else {
+            usuario = new Medico(nome, email, senha); // assumindo que Medico herda de Usuario
+        }
+
+        usuarios.add(usuario);
+        System.out.println("Cadastro realizado com sucesso!");
+    }
+
+    // Login HU02
+    private static void login() {
+        System.out.print("E-mail: ");
+        String email = scanner.nextLine();
+        System.out.print("Senha: ");
+        String senha = scanner.nextLine();
+
+        for (Usuario u : usuarios) {
+            if (u.getEmail().equals(email) && u.getSenha().equals(senha)) {
+                System.out.println("Bem-vindo, " + u.getNome());
+                if (u instanceof Medico) {
+                    menuMedico((Medico) u);
+                } else {
+                    menuPaciente(u);
+                }
+                return;
+            }
+        }
+        System.out.println("Usuário ou senha inválidos!");
+    }
+
+    // Menu Paciente HU03 e HU05
+    private static void menuPaciente(Usuario u) {
+        int opcao;
+        do {
+            System.out.println("\n--- Menu Paciente ---");
+            System.out.println("1. Agendar Consulta Online");
+            System.out.println("2. Agendar Consulta Presencial");
+            System.out.println("0. Voltar");
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1: System.out.println("Agendamento Online (simulação)..."); break;
+                case 2: System.out.println("Agendamento Presencial (simulação)..."); break;
+                case 0: break;
+                default: System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+
+    // Menu Médico HU04
+    private static void menuMedico(Medico medico) {
+        int opcao;
+        do {
+            System.out.println("\n--- Menu Médico ---");
+            System.out.println("1. Ver Agenda de Consultas");
+            System.out.println("0. Voltar");
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1:
+                    if (medico.getAgenda().isEmpty()) {
+                        System.out.println("Nenhuma consulta agendada.");
+                    } else {
+                        for (Consulta c : medico.getAgenda()) {
+                            System.out.println(c);
+                        }
+                    }
+                    break;
+                case 0: break;
+                default: System.out.println("Opção inválida!");
+            }
+        } while (opcao != 0);
+    }
+}

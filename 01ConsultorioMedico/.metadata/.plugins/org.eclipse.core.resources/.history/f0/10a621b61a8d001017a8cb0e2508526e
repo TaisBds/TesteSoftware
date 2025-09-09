@@ -1,0 +1,21 @@
+package br.com.agendamento;
+
+import java.time.LocalDateTime;
+
+public class Consulta {
+    private String paciente;
+    private LocalDateTime data;
+
+    public Consulta(String paciente, LocalDateTime data) {
+        this.paciente = paciente;
+        this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Consulta{" +
+                "paciente='" + paciente + '\'' +
+                ", data=" + data +
+                '}';
+    }
+}

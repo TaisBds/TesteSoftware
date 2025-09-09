@@ -1,0 +1,28 @@
+package br.com.agendamento;
+
+import br.com.sistema.Medico;
+import br.com.sistema.Usuario;
+
+public class ConsultaOnline extends Consulta {
+    private String link;
+
+    public ConsultaOnline(String data, String hora, Medico medico, Usuario paciente, String link) {
+        super(data, hora, medico, paciente);
+        this.link = link;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    @Override
+    public void agendarConsulta() {
+        super.agendarConsulta();
+        System.out.println("Link da consulta online: " + link);
+    }
+
+    @Override
+    public String resumo() {
+        return super.resumo() + " | Online (" + link + ")";
+    }
+}
